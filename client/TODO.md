@@ -1,0 +1,4 @@
+- [x] Add border border-gray-300 to ResetPassword.tsx
+- [x] Add border border-gray-300 to ForgotPassword.tsx
+- [x] Add border border-gray-300 to Login.tsx
+- [x] Add border border-gray-300 to Register.tsx
