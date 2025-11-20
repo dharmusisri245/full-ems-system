@@ -12,17 +12,16 @@ import Home from '@/pages/Home'
 import Login from '../Auth/Login'
 import Register from '@/Auth/Register'
 import ForgotPassword from '@/Auth/ForgotPassword'
-import ResetPassword from '@/Auth/ResetPassword'
+// import ResetPassword from '@/Auth/ResetPassword'
 const Approute:React.FC = () => {
-  return (
-    
+  return ( 
        <main className=" overflow-auto bg-gray-50 w-full h-full" style={{ overflow: 'auto' }}>
               <Routes>
                 <Route path='/' element={<Home/>}/>
                 <Route path='/login'element={<Login/>}/>
                 <Route path='/register' element={<Register/>}/>
                 <Route path='/forgot-password' element={<ForgotPassword/>}/>
-                <Route path='/reset-password' element={<ResetPassword/>}/>
+                {/* <Route path='/reset-password' element={<ResetPassword/>}/> */}
                 <Route path="/our-leadership" element={<OurLeadership />} />
                 <Route path="/organogram" element={<Organogram/>} />
                 <Route path="/application-policies" element={<ApplicationPolicies />} />
@@ -32,7 +31,6 @@ const Approute:React.FC = () => {
                 <Route path="/manage-applications" element={<ManageApplications />} />
               </Routes>
         </main>      
-
   )
 }
 export default Approute

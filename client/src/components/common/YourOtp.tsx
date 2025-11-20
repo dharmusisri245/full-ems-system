@@ -8,9 +8,19 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp"
 
-export function InputOTPPattern() {
+interface InputOTPPatternProps {
+  value?: string;
+  onChange?: (value: string) => void;
+}
+
+export function InputOTPPattern({ value, onChange }: InputOTPPatternProps) {
   return (
-    <InputOTP maxLength={6} pattern={REGEXP_ONLY_DIGITS_AND_CHARS}>
+    <InputOTP
+      maxLength={6}
+      pattern={REGEXP_ONLY_DIGITS_AND_CHARS}
+      value={value}
+      onChange={onChange}
+    >
       <InputOTPGroup>
         <InputOTPSlot index={0} />
         <InputOTPSlot index={1} />
