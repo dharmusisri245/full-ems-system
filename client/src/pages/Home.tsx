@@ -2,8 +2,15 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import Marquee from "react-fast-marquee";
-
+import audi from "../assets/audi.jpg"
+import tent from "../assets/tent.jpg"
+import sound from "../assets/Sangeet Decor.jpg"
+import hotal from "../assets/House Of Benedict.jpg"
+import hotel1 from "../assets/Fabrika Hostel & Suites, Tbilisi - 2025 Prices & Reviews.jpg"
+import car from "../assets/Scorpio N.jpg"
 import Autoplay from "embla-carousel-autoplay";
+import cars from "../assets/download (3).jpg"
+import suv from "../assets/download (4).jpg"
 import {
   Carousel,
   CarouselContent,
@@ -11,8 +18,14 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import Header from "@/component/Layout/Header";
 
 const Home = () => {
+  const handleLocationSearch = (Location:string)=>{
+    console.log("searching for" ,location);
+  }
+
+
   return (
     <div className="w-full min-h-screen bg-gray-100">
 
@@ -45,19 +58,20 @@ const Home = () => {
         >
           <CarouselContent>
             {[
-              "https://m.media-amazon.com/images/I/71qid7QFWJL._SX3000_.jpg",
-              "https://m.media-amazon.com/images/I/61DUO0NqyyL._SX3000_.jpg",
-              "https://m.media-amazon.com/images/I/71Ie3JXGfVL._SX3000_.jpg",
-              "https://m.media-amazon.com/images/I/71qid7QFWJL._SX3000_.jpg",
+              audi,
+              tent,
+              sound,
+              suv,
+              hotel1,
+              hotal,
+              car,
+              cars,
+              // "https://m.media-amazon.com/images/I/61DUO0NqyyL._SX3000_.jpg",
+              // "https://m.media-amazon.com/images/I/71Ie3JXGfVL._SX3000_.jpg",
+              // "https://m.media-amazon.com/images/I/71qid7QFWJL._SX3000_.jpg",
             ].map((img, i) => (
               <CarouselItem key={i} className="w-full">
                 <div className="w-full">
-                  {/* <img
-                    src={img}
-                    className="w-full h-[300px] md:h-[380px] object-cover shadow-md"
-                    alt={`banner-${i}`}
-                  /> */}
-
                   <img
                     src={img}
                     className="w-full h-[200px] sm:h-[250px] md:h-[300px] lg:h-[350px] object-fill shadow-md"
@@ -74,6 +88,8 @@ const Home = () => {
           <CarouselNext className="right-3 bg-white/60 hover:bg-white text-black" />
         </Carousel>
       </div>
+      {/* location */}
+      
       {/* ============================
             🔵 STATIC PRODUCT ITEMS
         ============================ */}
@@ -101,7 +117,7 @@ const Home = () => {
                   className="h-32 w-full object-cover rounded-t-xl"
                 />
               </CardHeader>
-
+              {/* <AdvancedMap/> */}
               <CardContent className="p-3">
                 <CardTitle className="text-lg">{item.title}</CardTitle>
               </CardContent>
@@ -114,3 +130,36 @@ const Home = () => {
 };
 
 export default Home;
+
+
+// import React, { useState } from "react";
+// import Header from "@/component/Layout/Header";
+// import AdvancedMap from "@/location/AdvanceMap";
+// import Location from "../location/Location"
+
+// const Home = () => {
+//   const [searchLocation, setSearchLocation] = useState<string>(""); // <-- store search
+
+//   // function passed to Header
+//   const handleLocationSearch = (location: string) => {
+//     setSearchLocation(location); // update state to pass to map
+//     console.log("Searching for:", location);
+//   };
+
+//   return (
+//     <div className="w-full min-h-screen bg-gray-100">
+//       {/* Header */}
+//       <Location
+//         toggleSidebar={() => console.log("Sidebar toggled")}
+//         isCollapsed={false}
+//         onLocationSearch={handleLocationSearch} // <-- pass function
+//       />
+
+//       {/* Advanced Map */}
+//       <AdvancedMap locationQuery={searchLocation} /> {/* <-- pass state */}
+//     </div>
+//   );
+// };
+
+// export default Home;
+

@@ -20,8 +20,14 @@
 
 // src/types/auth.types.ts
 export type User = {
-  _id?: string;
-  name?: string;
-  email?: string;
-  avatar?: string;
+  _id: string;
+  name: string;
+  email: string;
+  role: string;
+  password?: string;
+  category: string | null;
+  subCategory: string | null;  // REQUIRED
+  permissions: string[];
+  createdAt?: string;
+  updatedAt?: string;
 };

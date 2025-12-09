@@ -147,10 +147,42 @@ html, body {
   overflow-x: hidden; /* Page पर horizontal scrollbar छुपाएगा */
 }
 
+/* react quill  */
+/* global.css ya ek CSS module mein */
+.quill-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.quill-inner .ql-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.quill-inner .ql-editor {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 150px; /* adjust karo apne need ke hisaab se */
+}
+/* ====================================== */
+
 /* ==================== Select dropdown fix ==================== */
 [data-radix-popper-content-wrapper] {
   z-index: 9999 !important;
 }
+
+
+/* hide-scrollbar helper */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+
 
 
 
