@@ -1,44 +1,81 @@
-import React from 'react'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Input } from '@/components/ui/input'
-import { Search } from "lucide-react"
-import { Button } from '@/components/ui/button'
-import { Link } from 'react-router-dom'
-// import  logo  from '../../assets/logo (2).png'
+import React, { useState } from "react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Search } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Link, useNavigate } from "react-router-dom";
+import { useAppSelector, useAppDispatch } from "../../hooks/hooks";
+import { logout } from "../../redux/slices/authSlices";
+import AdvancedMap from "@/location/AdvanceMap";
+import { MapPin } from "lucide-react";
+import { useTranslation } from "react-i18next";
+
 interface HeaderProps {
   toggleSidebar: () => void;
   isCollapsed: boolean;
 }
 
-const Header: React.FC<HeaderProps> = ({ toggleSidebar, isCollapsed }) => {
-  const isAuth = false;
+const Header: React.FC<HeaderProps> = () => {
+  const user = useAppSelector((state) => state.auth.user); // reactive auth state
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+  const { t,i18n} = useTranslation()
+  const [open, setOpen] = useState(false);
+  const [locationInput, setLocationInput] = useState("");
+  const [productInput, setProductInput] = useState("");
+  const [showMap, setShowMap] = useState(false);
+
+  // logout handler
+  const handleLogout = () => {
+    dispatch(logout()); // clear Redux + token
+    navigate("/login");           // navigate to login
+  };
+
+  const handleLocationSearch = () => {
+    if (locationInput.trim() !== "") {
+      setShowMap(true);
+    }
+  };
+
+  const handleProductSearch = () => {
+    console.log('search product:', productInput);
+  };
+
   return (
-    <div className="w-full  bg-[#290c29ca] border-b border-gray-300">
-      {/* main header container */}
+    <div className="w-full bg-[#290c29ca] border-b border-gray-300">
       <div
-        className="flex items-center justify-between gap-3 sm:gap-5 px-2 py-2  bg-[#0a010abc]
+        className="flex items-center justify-between gap-3 sm:gap-5 px-2 py-2 bg-[#0a010abc]
         overflow-x-auto whitespace-nowrap hide-scrollbar"
       >
-        {/* Left side logo */}
+        {/* Logo */}
         <div className="flex justify-center gap-2 flex-shrink-0">
-          {/* <img src={logo} sizes='30' alt="EMS Logo" className="h-full w-full sm:h-10 sm:w-10 object-contain text-white" /> */}
-          <div className='flex flex-col' >
-              <span className="text-2xl font-extrabold text-center text-white sm:text-lg">EMS</span>
-          {/* <p className='text-white font-semibold'>Event || Management || System</p> */}
+          <div className="flex flex-col">
+            <span className="text-2xl font-extrabold text-center text-white sm:text-lg">EMS</span>
           </div>
         </div>
 
         {/* Location */}
         <div className="flex flex-col flex-shrink-0">
-          <span className="text-xs sm:text-sm text-white  -700">Delhi, India</span>
-          <span className="font-bold text-xs sm:text-sm text-white">Location Update</span>
+          <div className="flex text-center justify-center items-center">
+            <label className="text-white text-sm  pr-1">Location</label>
+            <div className=" flex relative w-full">
+              <MapPin className=" size-5  absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500" />
+              <Input
+                className="pl-8 w-full sm:w-40 md:w-50"
+                placeholder="Enter your location"
+                value={locationInput}
+                onChange={(e) => setLocationInput(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleLocationSearch()}
+              />
+            </div>
+          </div>
         </div>
 
-        {/* Search bar (flexible width) */}
-        <div className="flex items-center flex-grow max-w-[800px] min-w-[300px] bg-white rounded-b-lg rounded-t-lg">
+        {/* Search Bar */}
+        <div className="flex items-center flex-grow max-w-[800px] min-w-[300px] bg-white rounded-lg">
           <Select>
             <SelectTrigger className="w-[70px] rounded-l-md bg-amber-300">
-              <SelectValue placeholder="ALL" className="font-bold text-white" />
+              <SelectValue placeholder="ALL" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="Lawn">Lawn</SelectItem>
@@ -51,151 +88,120 @@ const Header: React.FC<HeaderProps> = ({ toggleSidebar, isCollapsed }) => {
             </SelectContent>
           </Select>
 
-          <Input placeholder="Search EMS.in" className="rounded-none flex-1 h-9" />
-          <Button className="bg-orange-400 rounded-l-none hover:bg-amber-500 h-9">
+          <Input placeholder="Search EMS.in" className="rounded-none flex-1 h-9" value={productInput} onChange={(e) => setProductInput(e.target.value)} onKeyDown={(e) => e.key === "Enter" && handleProductSearch()} />
+          <Button className="bg-orange-400 rounded-l-none hover:bg-amber-500 h-9" onClick={() => { if (locationInput.trim()) { handleLocationSearch(); } else { handleProductSearch(); } }}>
             <Search className="h-5 w-5" />
           </Button>
         </div>
 
-        {/* Language (EN) */}
-        <div className="flex-shrink">
-          <Select>
-            <SelectTrigger className="w-[68px] bg-white/100">
-              <SelectValue placeholder="EN"/>
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="Hindi">Hindi</SelectItem>
-              <SelectItem value="English">English</SelectItem>
-              <SelectItem value="German">German</SelectItem>
-              <SelectItem value="French">French</SelectItem>
-            </SelectContent>
-          </Select>
-        </div>
+        {/* Language */}
+        {/* <Select>
+          <SelectTrigger className="w-[68px] bg-white">
+            <SelectValue placeholder="EN" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="Hindi">Hindi</SelectItem>
+            <SelectItem value="English">English</SelectItem>
+            <SelectItem value="German">German</SelectItem>
+            <SelectItem value="French">French</SelectItem>
+          </SelectContent>
+        </Select> */}
 
-        {/* Account */}
-        <div className="flex flex-col text-center flex-shrink-0">
-          <p className="text-xs sm:text-sm text-white">Hello, 
-            <Link to="/login" className='hover:underline hover:size-2'>
-            SignIn
-            </Link>
-            </p>
+        {/* Language Selector */}
+        <Select onValueChange={(val) => i18n.changeLanguage(val)}>
+          <SelectTrigger className="w-[68px] bg-white">
+            <SelectValue placeholder="EN" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="en">English</SelectItem>
+            <SelectItem value="hi">Hindi</SelectItem>
+            <SelectItem value="German">German</SelectItem>
+            <SelectItem value="French">French</SelectItem>
+          </SelectContent>
+        </Select>
+
+        {/* Account Section */}
+        <div
+          className="relative flex flex-col text-center flex-shrink-0 cursor-pointer"
+          onMouseEnter={() => setOpen(true)}
+          onMouseLeave={() => setOpen(false)}
+        >
+          <p className="text-xs sm:text-sm text-white">
+            Hello,&nbsp;
+            {!user ? (
+              <Link to="/login" className="hover:underline text-yellow-300">Sign In</Link>
+            ) : (
+              <span className="font-semibold">{user.name}</span>
+            )}
+          </p>
+
           <span className="font-bold text-xs sm:text-sm text-white">Account & Lists</span>
+
+          {/* Dropdown */}
+          {open && (
+            <div className="absolute top-12 right-0 bg-white shadow-lg border rounded-md w-60 p-4 z-50">
+              {!user ? (
+                <>
+                  <Link
+                    to="/login"
+                    className="block bg-yellow-400 hover:bg-yellow-500 text-center py-2 font-semibold rounded"
+                  >
+                    Sign In
+                  </Link>
+
+                  <p className="text-xs text-center mt-2">
+                    New customer?{" "}
+                    <Link to="/register" className="text-blue-600 hover:underline">
+                      Create your account
+                    </Link>
+                  </p>
+                </>
+              ) : (
+                <div className="flex flex-col text-sm text-gray-800 space-y-2">
+                  <Link to="/profile" className="hover:underline">Your Account</Link>
+                  <Link to="/orders" className="hover:underline">Your Orders</Link>
+
+                  <button
+                    onClick={handleLogout}
+                    className="text-left text-red-600 hover:underline"
+                  >
+                    Sign Out
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Returns & Booking */}
-        <div className="flex flex-col text-center flex-shrink-0 whitespace-nowrap">
+        <div className="flex flex-col text-center flex-shrink-0">
           <p className="text-xs sm:text-sm text-white">Returns</p>
           <p className="font-semibold text-xs sm:text-sm text-white">& Booking</p>
         </div>
 
         {/* Your Booking */}
         <div className="flex items-center flex-shrink-0">
-          <span className="text-xs sm:text-sm  text-white">Your Booking</span>
+          <span className="text-xs sm:text-sm text-white">Your Booking</span>
         </div>
       </div>
 
+      {/* Advanced Map */}
+      {showMap && (
+        <div className="relative w-full h-96 bg-white border-t border-gray-300">
+          <Button
+            className="absolute top-2 right-2 z-10 bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+            onClick={() => setShowMap(false)}
+          >
+            Close
+          </Button>
+          <AdvancedMap locationQuery={locationInput} />
+        </div>
+      )}
     </div>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;
 
 
 
-// import React from 'react'
-// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-// import { Input } from '@/components/ui/input'
-// import { Search } from "lucide-react"
-// import { Button } from '@/components/ui/button'
-// import logo from '../../assets/logo (2).png'
-
-// interface HeaderProps {
-//   toggleSidebar: () => void;
-//   isCollapsed: boolean;
-// }
-
-// const Header: React.FC<HeaderProps> = () => {
-//   return (
-//     <div className="w-full bg-[#290c29ca] border-b border-gray-300">
-//       {/* main header container */}
-//       <div
-//         className="flex items-center justify-between gap-3 sm:gap-5 px-3 py-2 bg-[#0a010abc]
-//         overflow-x-auto whitespace-nowrap hide-scrollbar"
-//       >
-//         {/* 🔹 Left side logo */}
-//         <div className="flex items-center gap-2 flex-shrink-0">
-//           <div className="h-12 w-12 flex items-center justify-center bg-transparent">
-//             <img
-//               src={logo}
-//               alt="EMS Logo"
-//               className="h-full w-full object-contain"
-
-//         {/* 🔹 Location */}
-//         <div className="flex flex-col flex-shrink-0">
-//           <span className="text-xs sm:text-sm text-gray-200">Delhi, India</span>
-//           <span className="font-bold text-xs sm:text-sm text-white">Location Update</span>
-//         </div>
-
-//         {/* 🔹 Search bar */}
-//         <div className="flex items-center flex-grow max-w-[800px] min-w-[280px] bg-white rounded-lg overflow-hidden">
-//           <Select>
-//             <SelectTrigger className="w-[70px] bg-amber-300 font-semibold text-black border-none">
-//               <SelectValue placeholder="ALL" />
-//             </SelectTrigger>
-//             <SelectContent>
-//               <SelectItem value="Lawn">Lawn</SelectItem>
-//               <SelectItem value="Hotel">Hotel</SelectItem>
-//               <SelectItem value="Tent">Tent</SelectItem>
-//               <SelectItem value="Sound-System">Sound-System</SelectItem>
-//               <SelectItem value="Catering">Catering</SelectItem>
-//               <SelectItem value="Light">Light</SelectItem>
-//               <SelectItem value="Vehicle">Vehicle</SelectItem>
-//             </SelectContent>
-//           </Select>
-
-//           <Input
-//             placeholder="Search EMS.in"
-//             className="rounded-none flex-1 h-9 border-none focus-visible:ring-0"
-//           />
-//           <Button className="bg-orange-400 hover:bg-amber-500 h-9 rounded-none rounded-r-md">
-//             <Search className="h-5 w-5" />
-//           </Button>
-//         </div>
-
-//         {/* 🔹 Language */}
-//         <div className="flex-shrink-0">
-//           <Select>
-//             <SelectTrigger className="w-[65px] bg-white text-black">
-//               <SelectValue placeholder="EN" />
-//             </SelectTrigger>
-//             <SelectContent>
-//               <SelectItem value="Hindi">Hindi</SelectItem>
-//               <SelectItem value="English">English</SelectItem>
-//               <SelectItem value="German">German</SelectItem>
-//               <SelectItem value="French">French</SelectItem>
-//             </SelectContent>
-//           </Select>
-//         </div>
-
-//         {/* 🔹 Account */}
-//         <div className="flex flex-col text-center flex-shrink-0 text-white">
-//           <p className="text-xs sm:text-sm">Hello, sign in</p>
-//           <span className="font-bold text-xs sm:text-sm">Account & Lists</span>
-//         </div>
-
-//         {/* 🔹 Returns & Booking */}
-//         <div className="flex flex-col text-center flex-shrink-0 text-white">
-//           <p className="text-xs sm:text-sm">Returns</p>
-//           <p className="font-semibold text-xs sm:text-sm">& Booking</p>
-//         </div>
-
-//         {/* 🔹 Your Booking */}
-//         <div className="flex items-center flex-shrink-0">
-//           <span className="text-xs sm:text-sm text-white">Your Booking</span>
-//         </div>
-//       </div>
-//     </div>
-//   )
-// }
-
-// export default Header

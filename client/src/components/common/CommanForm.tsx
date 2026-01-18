@@ -1,3 +1,5 @@
+
+
 import React from 'react'
 import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
@@ -6,8 +8,7 @@ import { Textarea } from '../ui/textarea';
 import { Button } from '../ui/button';
 import { Link } from 'react-router-dom';
 
-
-function CommanForm({ formControls, formData, setFormData, onSubmit, buttonText }) {
+function CommanForm({ formControls, formData, setFormData, onSubmit, buttonText, showButton = true }) {
 
   function renderInputByComponentType(getControlItem) {
     let element = null;
@@ -98,8 +99,7 @@ function CommanForm({ formControls, formData, setFormData, onSubmit, buttonText 
             <div key={controlItem.name} className='grid w-full gap-1.5'>
               <div className='flex justify-between'>
                 <Label className='mb-1'>{controlItem.label}</Label>
-                <div className='flex gap-2'>
-                  {/* Absolute path used here */}
+                {/* <div className='flex gap-2'>
                   <Link to="/forgot-password" className='text-orange-300 hover:underline'>
                     {controlItem.label2}
                   </Link>
@@ -107,14 +107,26 @@ function CommanForm({ formControls, formData, setFormData, onSubmit, buttonText 
                   <Link to="/reset-password" className='text-green-400 hover:underline'>
                     {controlItem.label1}
                   </Link>
-                </div>
+                </div> */}
               </div>
+
               {renderInputByComponentType(controlItem)}
             </div>
           ))
         }
       </div>
-      <Button type='submit' className={`mt-2 w-full ${buttonText === 'Send OTP' ? 'bg-orange-200 hover:bg-orange-300 text-orange-800' : ''}`}>{buttonText || "submit"}</Button>
+
+      {/* Only NEW logic added — hide/show button */}
+      {showButton && (
+        <Button
+          type='submit'
+          className={`mt-2 w-full ${buttonText === 'Send OTP'
+            ? 'bg-orange-200 hover:bg-orange-300 text-orange-800'
+            : ''}`}
+        >
+          {buttonText || "submit"}
+        </Button>
+      )}
     </form>
   )
 }
